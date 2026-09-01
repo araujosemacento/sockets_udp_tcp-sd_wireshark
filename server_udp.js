@@ -3,7 +3,9 @@ const dgram = require('dgram');
 const server = dgram.createSocket('udp4');
 
 server.on('message', (echo, rinfo) => {
-    server.send(`UDP: ${echo}`, rinfo.port, rinfo.address);
+    const res = `UDP: ${echo}`;
+    console.log(res);
+    server.send(res, rinfo.port, rinfo.address);
 });
 
 server.bind(3333, '127.0.0.1', () => {

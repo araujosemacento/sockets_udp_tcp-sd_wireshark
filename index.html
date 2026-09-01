@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sockets TCP | UDP</title>
+    <style>
+        pre {
+            background-color: #ccc;
+            border-radius: 7px;
+            padding: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Sockets do Cliente</h3>
+
+    <label><input type="radio" name="p" value="tcp" checked> TCP</label>
+    <label><input type="radio" name="p" value="udp"> UDP</label>
+
+    <br><br>
+
+    <label for="msg">Mensagem:</label><br>
+    <input id="msg" placeholder="Digite sua mensagem" onkeydown="if (event.key === 'Enter') enviar();">
+    <button onclick="enviar()">Enviar</button>
+
+    <h4>Histórico de Respostas:</h4>
+    <pre id="log"></pre>
+
+    <script>
+        async function enviar() {
+            const msg = document.getElementById('msg').value;
+            const proto = document.querySelector('input[name="p"]:checked').value;
+            if (!msg) return;
+
+            const res = await fetch(`/send?proto=${proto}&msg=${encodeURIComponent(msg)}`);
+            const texto = await res.text();
+
+            document.getElementById('log').textContent += texto + '\n';
+            document.getElementById('msg').value = '';
+        }
+    </script>
+</body>
+
+</html>

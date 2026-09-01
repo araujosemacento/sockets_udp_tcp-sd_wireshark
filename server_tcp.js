@@ -1,7 +1,11 @@
 const net = require('net');
 
 const server = net.createServer((socket) => {
-    socket.on('data', (echo) => socket.write(`TCP: ${echo}`));
+    socket.on('data', (echo) => {
+        const res = `TCP: ${echo}`;
+        console.log(res);
+        socket.write(res);
+    });
 });
 
 server.listen(3030, '127.0.0.1', () => {
