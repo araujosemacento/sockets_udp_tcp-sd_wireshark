@@ -21,8 +21,7 @@
 
     <br><br>
 
-    <label><input type="radio" name="p" value="tcp-null"> TCP Desligado</label>
-    <label><input type="radio" name="p" value="udp-null"> UDP Desligado</label>
+    <label><input type="checkbox" id="desligado"> Desligar servidores</label>
 
     <br><br>
 
@@ -37,9 +36,10 @@
         async function enviar() {
             const msg = document.getElementById('msg').value;
             const proto = document.querySelector('input[name="p"]:checked').value;
+            const off = document.getElementById('desligado').checked;
             if (!msg) return;
 
-            const res = await fetch(`/send?proto=${proto}&msg=${encodeURIComponent(msg)}`);
+            const res = await fetch(`/send?proto=${proto}&msg=${encodeURIComponent(msg)}&off=${off}`);
             const texto = await res.text();
 
             document.getElementById('log').textContent += texto + '\n';

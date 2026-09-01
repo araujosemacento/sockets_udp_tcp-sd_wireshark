@@ -16,32 +16,31 @@ http.createServer((req, res) => {
     if (url.pathname === '/send') {
         const proto = url.searchParams.get('proto');
         const msg = url.searchParams.get('msg');
+        const off = url.searchParams.get('off') === 'true';
 
-        switch (proto) {
-            case 'tcp': {
-                const client = net.connect(3030, '127.0.0.1', () => client.write(msg));
-                client.on('data', data => { res.end(data); client.end(); });
-                break;
-            }
-            case 'udp': {
-                const client = dgram.createSocket('udp4');
-                client.send(msg, 3333, '127.0.0.1');
-                client.on('message', data => { res.end(data); client.close(); });
-                break;
-            }
-            case 'tcp-null': {
-                const client = net.connect(9999, '127.0.0.1', () => client.write(msg));
-                client.on('data', data => { res.end(data); client.end(); });
-                client.on('error', () => { res.end('Falha na conexão. Servidor TCP inalcançavel.'); });
-                break;
-            }
-            case 'udp-null': {
-                const client = dgram.createSocket('udp4');
-                client.send(msg, 9999, '127.0.0.1');
-                const timeout = setTimeout(() => { res.end('Falha na conexão. Servidor UDP sem resposta.'); client.close(); }, 2000);
-                client.on('message', data => { clearTimeout(timeout); res.end(data); client.close(); });
-                break;
-            }
+        if (proto === 'tcp') {
+            const port = off ? 9999 : 3030;
+            const client = net.connect(port, '127.0.0.1', () => client.write(msg));
+
+            client.on('data', data => { res.end(data); client.end(); });
+
+            client.on('error', () => res.end('Falha na conexão. Servidor TCP inalcançavel.'));
+        } else {
+            const port = off ? 9999 : 3333;
+            const client = dgram.createSocket('udp4');
+
+            client.send(msg, port, '127.0.0.1');
+
+            const timeout = setTimeout(() => {
+                res.end('Falha na conexão. Servidor UDP sem resposta.');
+                client.close();
+            }, 2000);
+
+            client.on('message', data => {
+                clearTimeout(timeout);
+                res.end(data);
+                client.close();
+            });
         }
     }
 }).listen(3000, () => console.log('Servidor Web rodando em http://localhost:3000'));
