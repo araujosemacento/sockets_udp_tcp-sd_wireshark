@@ -1,0 +1,16 @@
+{
+  "name": "sockets_udp_tcp-sd_wireshark",
+  "version": "1.0.0",
+  "description": "Conversor de moedas utilizando sockets TCP e UDP pra análise de rede com Wireshark",
+  "main": "server.js",
+  "scripts": {
+    "start": "node run server.js",
+    "server": "node run server.js",
+    "client:tcp": "node run src/client/client_tcp.js",
+    "client:udp": "node run src/client/client_udp.js",
+    "rates:update": "node run src/utils/cotacoes_do_g20.js"
+  },
+  "keywords": ["sockets", "tcp", "udp", "wireshark"],
+  "author": "G. Melo",
+  "license": "MIT"
+}

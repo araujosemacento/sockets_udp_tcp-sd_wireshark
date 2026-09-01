@@ -1,5 +1,5 @@
 const dgram = require('dgram');
-const converter = require('./conversor.js');
+const converter = require('../utils/conversor.js');
 
 const server = dgram.createSocket('udp4');
 

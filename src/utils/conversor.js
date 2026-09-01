@@ -1,8 +1,10 @@
 const fs = require('fs');
+const path = require('path');
 
 function converter(msg) {
-    const { cotacoes } = JSON.parse(fs.readFileSync('cotacoes.json', 'utf8'));
-    const [valorStr, moeda] = msg.toString().trim().split(' ');
+    const jsonPath = path.join(__dirname, 'cotacoes.json');
+    const { cotacoes } = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    const [valorStr, moeda] = msg.toString().trim().split(/\s+/);
     const valor = parseFloat(valorStr);
 
     const taxaBRL = cotacoes['BRL'];

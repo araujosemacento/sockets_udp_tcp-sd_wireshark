@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const MOEDAS_G20 = [
     'ARS', 'AUD', 'BRL', 'CAD', 'CNY', 'EUR', 'GBP', 'IDR',
@@ -15,7 +16,8 @@ async function atualizarCotacoes() {
             if (data.rates[code]) cotacoes[code] = data.rates[code];
         }
 
-        fs.writeFileSync('cotacoes.json', JSON.stringify({
+        const jsonPath = path.join(__dirname, 'cotacoes.json');
+        fs.writeFileSync(jsonPath, JSON.stringify({
             atualizadoEm: data.time_last_update_utc,
             base: 'USD',
             cotacoes
@@ -23,7 +25,7 @@ async function atualizarCotacoes() {
 
         console.log('Cotações salvas em cotacoes.json');
     } catch (err) {
-        console.error('Sem conexão.');
+        console.error('Sem conexão. Mantendo dados do cache local.');
     }
 }
 

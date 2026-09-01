@@ -1,5 +1,5 @@
 const net = require('net');
-const converter = require('./conversor.js');
+const converter = require('../utils/conversor.js');
 
 const server = net.createServer((socket) => {
     socket.on('data', (msg) => {
