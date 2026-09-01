@@ -3,6 +3,8 @@ const fs = require('fs');
 const net = require('net');
 const dgram = require('dgram');
 
+require('./cotacoes_do_g20.js');
+
 require('./server_tcp.js');
 require('./server_udp.js');
 

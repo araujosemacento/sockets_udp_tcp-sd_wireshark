@@ -1,9 +1,10 @@
 const dgram = require('dgram');
+const converter = require('./conversor.js');
 
 const server = dgram.createSocket('udp4');
 
-server.on('message', (echo, rinfo) => {
-    const res = `UDP: ${echo}`;
+server.on('message', (msg, rinfo) => {
+    const res = `UDP: ${converter(msg)}`;
     console.log(res);
     server.send(res, rinfo.port, rinfo.address);
 });

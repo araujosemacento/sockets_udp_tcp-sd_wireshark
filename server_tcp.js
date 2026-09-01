@@ -1,8 +1,9 @@
 const net = require('net');
+const converter = require('./conversor.js');
 
 const server = net.createServer((socket) => {
-    socket.on('data', (echo) => {
-        const res = `TCP: ${echo}`;
+    socket.on('data', (msg) => {
+        const res = `TCP: ${converter(msg)}`;
         console.log(res);
         socket.write(res);
     });

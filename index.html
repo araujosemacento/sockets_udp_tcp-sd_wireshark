@@ -25,8 +25,28 @@
 
     <br><br>
 
-    <label for="msg">Mensagem:</label><br>
-    <input id="msg" placeholder="Digite sua mensagem" onkeydown="if (event.key === 'Enter') enviar();">
+    <label for="valor">R$:</label><br>
+    <input type="number" id="valor" placeholder="Ex: 100" step="any" onkeydown="if (event.key === 'Enter') enviar();">
+
+    <select id="moeda">
+        <option value="USD">🇺🇸 USD</option>
+        <option value="EUR">🇪🇺 EUR</option>
+        <option value="GBP">🇬🇧 GBP</option>
+        <option value="JPY">🇯🇵 JPY</option>
+        <option value="CAD">🇨🇦 CAD</option>
+        <option value="AUD">🇦🇺 AUD</option>
+        <option value="CNY">🇨🇳 CNY</option>
+        <option value="ARS">🇦🇷 ARS</option>
+        <option value="INR">🇮🇳 INR</option>
+        <option value="KRW">🇰🇷 KRW</option>
+        <option value="MXN">🇲🇽 MXN</option>
+        <option value="RUB">🇷🇺 RUB</option>
+        <option value="SAR">🇸🇦 SAR</option>
+        <option value="TRY">🇹🇷 TRY</option>
+        <option value="ZAR">🇿🇦 ZAR</option>
+        <option value="IDR">🇮🇩 IDR</option>
+    </select>
+
     <button onclick="enviar()">Enviar</button>
 
     <h4>Histórico de Respostas:</h4>
@@ -34,16 +54,18 @@
 
     <script>
         async function enviar() {
-            const msg = document.getElementById('msg').value;
+            const valor = document.getElementById('valor').value;
+            const moeda = document.getElementById('moeda').value;
             const proto = document.querySelector('input[name="p"]:checked').value;
             const off = document.getElementById('desligado').checked;
-            if (!msg) return;
+            if (!valor) return;
 
+            const msg = `${valor} ${moeda}`;
             const res = await fetch(`/send?proto=${proto}&msg=${encodeURIComponent(msg)}&off=${off}`);
             const texto = await res.text();
 
             document.getElementById('log').textContent += texto + '\n';
-            document.getElementById('msg').value = '';
+            document.getElementById('valor').value = '';
         }
     </script>
 </body>
