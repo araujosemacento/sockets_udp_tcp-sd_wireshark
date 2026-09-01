@@ -21,6 +21,11 @@
 
     <br><br>
 
+    <label><input type="radio" name="p" value="tcp-null"> TCP Desligado</label>
+    <label><input type="radio" name="p" value="udp-null"> UDP Desligado</label>
+
+    <br><br>
+
     <label for="msg">Mensagem:</label><br>
     <input id="msg" placeholder="Digite sua mensagem" onkeydown="if (event.key === 'Enter') enviar();">
     <button onclick="enviar()">Enviar</button>
