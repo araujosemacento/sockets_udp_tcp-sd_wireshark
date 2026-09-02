@@ -1,35 +1,35 @@
-# sockets_udp_tcp-sd_wireshark
+# Sockets TCP & UDP — Conversor de Moedas e Análise de Rede com Wireshark
 
-Conversor de moedas utilizando sockets TCP e UDP pra análise de rede com Wireshark.
+Projeto pra comparar a comunicação em rede utilizando **Sockets TCP** e **Sockets UDP** em `Node.js`, utilizando a captura de tráfego de pacotes via **Wireshark**.
 
 ---
 
-## Arquitetura
+## Arquitetura do Sistema
 
 ```mermaid
 flowchart TD
-    subgraph Clientes
+    subgraph Clientes ["Camada de Clientes"]
         CLI_TCP["client_tcp.js (CLI)"]
         CLI_UDP["client_udp.js (CLI)"]
         WEB["index.html (Navegador)"]
     end
 
-    subgraph Entrada
+    subgraph Entrada ["Camada Web"]
         SERVER["server.js (Porta 3000)"]
     end
 
-    subgraph Sockets
-        TCP["server_tcp.js (Porta 3030)"]
-        UDP["server_udp.js (Porta 3333)"]
+    subgraph Sockets ["Camada de Sockets"]
+        TCP["server_tcp.js (Porta 3030 - TCP)"]
+        UDP["server_udp.js (Porta 3333 - UDP)"]
     end
 
-    subgraph Dados
+    subgraph Dados ["Camada de Regras e Dados"]
         CONV["conversor.js"]
         JSON[("cotacoes.json")]
         API["cotacoes_do_g20.js"]
     end
 
-    API -.->|"Atualiza"| JSON
+    API -.->|"Atualiza cotações"| JSON
     WEB -->|"HTTP GET /send"| SERVER
     SERVER -->|"TCP Socket"| TCP
     SERVER -->|"UDP Socket"| UDP
@@ -37,8 +37,8 @@ flowchart TD
     CLI_TCP -->|"TCP Socket"| TCP
     CLI_UDP -->|"UDP Datagrama"| UDP
 
-    TCP -->|"Calcula"| CONV
-    UDP -->|"Calcula"| CONV
+    TCP -->|"Calcula conversão"| CONV
+    UDP -->|"Calcula conversão"| CONV
     CONV -->|"Lê taxas"| JSON
 ```
 
@@ -48,27 +48,71 @@ flowchart TD
 
 ## Execução
 
-### 1. Iniciar servidores (TCP, UDP e Web)
+### 1. Pré-requisitos
+
+- [Node.js](https://nodejs.org/) (v18+) ou [Bun](https://bun.sh/)
+
+### 2. Iniciar os Servidores
+
+Inicia simultaneamente o servidor Web HTTP (3000), o servidor TCP (3030) e o servidor UDP (3333):
+
 ```bash
-node run server.js
-# ou: node start
+npm start
+# ou: node server.js
 ```
-- Interface Web: `http://localhost:3000`
-- Servidor TCP: `127.0.0.1:3030`
-- Servidor UDP: `127.0.0.1:3333`
 
-### 2. Usar clientes CLI
-Em outro terminal, com o servidor ativo:
+- Interface Web no navegador: [http://localhost:3000](http://localhost:3000)
+
+### 3. Executar os Clientes CLI
+
+Em outro terminal (com os servidores rodando):
 
 ```bash
-bun run src/client/client_tcp.js 10 USD
+# Cliente TCP (Sintaxe: npm run client:tcp -- <VALOR> <MOEDA>)
+npm run client:tcp -- 100 USD
 
-bun run src/client/client_udp.js 50 EUR
+# Cliente UDP (Sintaxe: npm run client:udp -- <VALOR> <MOEDA>)
+npm run client:udp -- 100 EUR
 ```
 
 ---
 
-## Filtros no Wireshark
+## Análise de Tráfego com Wireshark
 
-- **TCP**: `tcp.port == 3030`
-- **UDP**: `udp.port == 3333`
+Para inspecionar o tráfego de rede gerado pelos sockets:
+
+| Filtro                                   | Finalidade               |
+| :--------------------------------------- | :----------------------- |
+| `tcp.port == 3030`                       | Tráfego do socket TCP    |
+| `udp.port == 3333`                       | Datagramas do socket UDP |
+| `tcp.port == 3030 \|\| udp.port == 3333` | Ambos os sockets         |
+| `tcp.flags.syn == 1`                     | Abertura da conexão TCP  |
+
+---
+
+## Estrutura do Projeto
+
+```text
+sockets_udp_tcp-sd_wireshark/
+├── src/
+│   ├── client/
+│   │   ├── client_tcp.js          # Cliente CLI que se conecta ao socket TCP
+│   │   ├── client_udp.js          # Cliente CLI que envia datagramas UDP
+│   │   └── index.html             # Interface Web
+│   ├── server/
+│   │   ├── server_tcp.js          # Servidor socket TCP
+│   │   └── server_udp.js          # Servidor socket UDP
+│   └── utils/
+│       ├── conversor.js           # Lógica de cálculo cambial
+│       ├── cotacoes.json          # Cache local de cotações em JSON
+│       └── cotacoes_do_g20.js     # Sincronização com API
+├── package.json                   # Dependências e scripts
+├── server.js                      # Ponto de entrada
+└── README.md                      # Documentação
+```
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença [MIT](./LICENSE).

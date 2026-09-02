@@ -16,18 +16,22 @@
 <body>
     <h3>Sockets do Cliente</h3>
 
+    <!-- Switch pra escolher o protocolo -->
     <label><input type="radio" name="p" value="tcp" checked> TCP</label>
     <label><input type="radio" name="p" value="udp"> UDP</label>
 
     <br><br>
 
+    <!-- Switch pra desligar os servidores -->
     <label><input type="checkbox" id="desligado"> Desligar servidores</label>
 
     <br><br>
 
+    <!-- Input do valor em BRL -->
     <label for="valor">R$:</label><br>
     <input type="number" id="valor" placeholder="Ex: 100" step="any" onkeydown="if (event.key === 'Enter') enviar();">
 
+    <!-- Select das moedas -->
     <select id="moeda">
         <option value="USD">🇺🇸 USD</option>
         <option value="EUR">🇪🇺 EUR</option>
@@ -58,13 +62,19 @@
             const moeda = document.getElementById('moeda').value;
             const proto = document.querySelector('input[name="p"]:checked').value;
             const off = document.getElementById('desligado').checked;
+
             if (!valor) return;
 
             const msg = `${valor} ${moeda}`;
+
+            // Envia a requisição ao servidor selecionado
             const res = await fetch(`/send?proto=${proto}&msg=${encodeURIComponent(msg)}&off=${off}`);
             const texto = await res.text();
 
+            // Adiciona a resposta ao log
             document.getElementById('log').textContent += texto + '\n';
+
+            // Limpa o input
             document.getElementById('valor').value = '';
         }
     </script>
