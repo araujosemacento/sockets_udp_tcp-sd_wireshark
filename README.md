@@ -42,7 +42,8 @@ flowchart TD
     CONV -->|"Lê taxas"| JSON
 ```
 
-<span style="color:red">Esse diagram foi feito usando inteligência artificial.</span>
+> [!NOTE]
+> Esse diagram foi feito usando inteligência artificial.
 
 ---
 
