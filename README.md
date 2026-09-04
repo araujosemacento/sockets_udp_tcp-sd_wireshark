@@ -43,7 +43,7 @@ flowchart TD
 ```
 
 > [!NOTE]
-> Esse diagram foi feito usando inteligência artificial.
+> Esse diagrama foi feito usando inteligência artificial.
 
 ---
 
